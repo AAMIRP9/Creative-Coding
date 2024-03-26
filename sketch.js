@@ -1,70 +1,40 @@
-var points = []
-var mult 
-
-var r1
-var r2
-var g1
-var g2
-var b1
-var b2
-
 function setup() {
-  createCanvas(windowWidth, windowHeight)
-  background(30)
+  createCanvas(400, 400, WEBGL)
   angleMode(DEGREES)
-  noiseDetail(1)
-  
-  var density = 30
-  var space = width / density
-  
-  for (var x = 0; x < width; x += space) {
-      for (var y = 0; y < height; y+= space) {
-          var p = createVector(x + random(-10, 10), y + random(-10, 10))
-          points.push(p)
-      }
-  }
-
-  shuffle(points, true)
-
-  r1 = random(255)
-  r2 = random(255)
-  g1 = random(255)
-  g2 = random(255)
-  b1 = random(255)
-  b2 = random(255)
-
-  mult = random(0.002, 0.01)
 }
 
 function draw() {
-    noStroke()
-    
-    if (frameCount * 3 <= points.length) {
-        var max = frameCount * 3      
-    } else {
-        var max = points.length
+  background(30)
+  
+  rotateX(60)
+
+  noFill()
+  stroke(255)
+  
+
+
+  for (var i = 0; i <50; i++) {
+
+    var r = map(sin(frameCount / 2), -1, 1, 100, 200)
+    var g = map(i, 0, 50, 100, 200)
+    var b = map(cos(frameCount), -1, 1, 200, 100)
+
+    stroke(r, g, b)
+
+    rotate(frameCount / 20)
+
+    beginShape()
+    for (var j = 0; j < 360; j += 60) {
+      var rad = i * 3
+      var x = rad * cos(j)
+      var y = rad * sin(j)
+      var z = sin(frameCount * 2 + i * 5) * 50
+
+      vertex(x, y, z)
     }
-
-
-    for (var i = 0; i < max; i++) {
-
-        var r = map(points[i].x, 0, width, r1, r2)
-        var g = map(points[i].y, 0, height, g1, g2)
-        var b = map(points[i].x, 0, width, b1, b2)
-        var alpha = map(dist(width / 2, height / 2, points [i].x, points[i].y), 0, 350, 400, 0)
-
-        fill(r, g, b, alpha)
-
-        var angle = map(noise(points[i].x * mult, points[i].y * mult), 0, 1, 0, 720)
-
-        points [i].add(createVector(cos(angle), sin(angle)))
-
-        if (dist(width / 2, height / 2, points[i].x, points[i].y) < 350) {
-          ellipse(points[i].x, points[i].y, 1)
-        }
-
-    }
+    endShape(CLOSE)
+  }
 }
 function mouseClicked() {
-    saveCanvas('flowfiel', 'png')
+  saveCanvas('sinewave', 'png')
 }
